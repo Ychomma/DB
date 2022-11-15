@@ -1,0 +1,13 @@
+# 数据库配置
+server:
+  port: 9090 # 前端使用8080端口，改成9090避免冲突
+
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/library-management?serverTimezone=GMT%2b8 # 北京时间
+    username: root
+    password: cqy374545
+
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
