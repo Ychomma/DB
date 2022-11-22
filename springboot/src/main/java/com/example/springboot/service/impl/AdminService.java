@@ -18,8 +18,10 @@ import com.github.pagehelper.PageInfo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.Date;
 import java.util.List;
 
@@ -50,7 +52,12 @@ public class AdminService implements IAdminService {
             obj.setPassword(DEFAULT_PASS);
         }
         obj.setPassword(securePass(obj.getPassword()));
-        adminMapper.save(obj);
+        try {
+            adminMapper.save(obj);
+        } catch (DuplicateKeyException e) {
+            log.error("数据插入失败，username={}", obj.getUsername(), e);
+            throw new ServiceException("用户插入失败");
+        }
     }
 
     @Override
@@ -72,14 +79,22 @@ public class AdminService implements IAdminService {
 
     @Override
     public LoginDTO login(LoginRequest request) {
-        request.setPassword(securePass(request.getPassword()));
-        Admin admin = adminMapper.getByUsernameAndPassword(request.getUsername(), request.getPassword());
+        Admin admin = null;
+        try {
+            admin = adminMapper.getByUsername(request.getUsername());
+        } catch (Exception e) {
+            log.error("根据用户名{}查询出错", request.getUsername());
+            throw new ServiceException("用户名错误");
+        }
         if (admin == null) {
+            throw new ServiceException("用户名或密码错误");
+        }
+        String securePass = securePass(request.getPassword());
+        if (!securePass.equals(admin.getPassword())) {
             throw new ServiceException("用户名或密码错误");
         }
         if (!admin.isStatus()) {
             throw new ServiceException("当前用户处于禁用状态，请联系管理员");
-
         }
         //将Admin对象转换为LoginDTO再返回
         LoginDTO loginDTO = new LoginDTO();
@@ -104,6 +119,7 @@ public class AdminService implements IAdminService {
     private String securePass(String password) {
         return SecureUtil.md5(password + PASS_SALT);
     }
+
 }
 
 // listUsers()接口的使用：

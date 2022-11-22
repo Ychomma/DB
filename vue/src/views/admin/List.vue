@@ -54,6 +54,7 @@
           :total="total">
       </el-pagination>
     </div>
+
     <el-dialog title="修改密码" :visible.sync="dialogFormVisible" width="30%">
       <el-form :model="form" label-width="100" ref="formRef" :rules="rules">
         <el-form-item label="新密码" prop="newPass">
@@ -106,13 +107,12 @@ export default {
       if (this.admin.id === row.id && !row.status) {
         row.status = true;
         this.$notify.warning("您的操作不合法");
-
-        return;
+        return
       }
       request.put('/admin/update', row).then(res => {
         if (res.code === '200') {
           this.$notify.success('操作成功')
-          this.load();
+          this.load()
         } else {
           this.$notify.error(res.msg)
         }

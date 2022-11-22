@@ -30,5 +30,7 @@ public interface AdminMapper {
     Admin getByUsernameAndPassword(@Param("username") String username, @Param("password") String password);
 
     int updatePassword(PasswordRequest request);
+
+    Admin getByUsername(String username);
 }
 //这个接口就是用来操作数据库的
