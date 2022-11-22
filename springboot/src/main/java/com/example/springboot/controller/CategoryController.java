@@ -7,6 +7,7 @@ import com.example.springboot.service.ICategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @CrossOrigin //解决跨域问题
@@ -25,6 +26,7 @@ public class CategoryController {
 
     @PutMapping("/update")
     public Result update(@RequestBody Category obj) {
+        obj.setUpdatetime(LocalDate.now());
         categoryService.update(obj);
         return Result.success();
     }
@@ -55,4 +57,6 @@ public class CategoryController {
     public Result page(CategoryPageRequest pageRequest) {
         return Result.success(categoryService.page(pageRequest));
     }
+
+
 }

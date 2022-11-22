@@ -3,23 +3,35 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.springboot.mapper.CategoryMapper">
+
+    <resultMap id="categoryMap" type="com.example.springboot.entity.Category">
+        <id column="id" property="id"></id>
+        <result column="name" property="name"></result>
+        <result column="remark" property="remark"></result>
+        <result column="createtime" property="createtime"></result>
+        <result column="updatetime" property="updatetime"></result>
+        <collection select="selectByPid" column="id" property="children" ofType="com.example.springboot.entity.Category"></collection>
+
+    </resultMap>
+    <select id="selectByPid" resultType="com.example.springboot.entity.Category">
+        select * from category where pid=#{id}
+    </select>
     <insert id="save">
-        insert into category (name, remark)
-        values (#{name}, #{remark})
+        insert into category (name, remark,pid)
+        values (#{name}, #{remark},#{pid})
     </insert>
 
     <update id="updateById">
         update category
         set name= #{name},
             remark = #{remark},
-            updatetime = #{updatetime},
+            updatetime = #{updatetime}
             where id = #{id}
     </update>
     <delete id="deleteById">
         delete
         from category
-        where id =
-              #{id}
+        where id = #{id}
     </delete>
 
     <!-- select标签中的id就是UserMapper中方法的名字 -->
@@ -30,15 +42,19 @@
     </select>
 
     <!-- 动态sql：当name、phone不为空的时候才会拼接查询语句 -->
-    <select id="listByCondition" resultType="com.example.springboot.entity.Category">
-        select *
-        from category
+    <select id="listByCondition" resultMap="categoryMap">
+        select c1.*
+        from category c1
+        left join category c2
+        on c1.id=c2.pid
         <where>
+            isnull(c1.pid)
             <if test="name != null and name != ''">
-                name like concat('%', #{name}, '%')
+                and (c1.name like concat('%', #{name}, '%') or c2.name like concat('%', #{name}, '%'))
             </if>
         </where>
-        order by id desc
+        group by c1.id
+        order by c1.id desc
     </select>
 
     <select id="getById" resultType="com.example.springboot.entity.Category">

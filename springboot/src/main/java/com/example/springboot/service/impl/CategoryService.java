@@ -27,13 +27,13 @@ public class CategoryService implements ICategoryService {
     @Override
     public PageInfo<Category> page(BaseRequest baseRequest) {
         PageHelper.startPage(baseRequest.getPageNum(), baseRequest.getPageSize());
+        //自关联查询
         List<Category> categories = categoryMapper.listByCondition(baseRequest);
         return new PageInfo<>(categories);
     }
 
     @Override
     public void save(Category obj) {
-        System.out.println("hello");
         categoryMapper.save(obj);
     }
 

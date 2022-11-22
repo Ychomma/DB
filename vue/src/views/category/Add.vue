@@ -37,7 +37,6 @@ export default {
       this.$refs['ruleForm'].validate((valid) => {
         if (valid) {
           request.post('/category/save', this.form).then(res => {
-            console.log(res)
             if (res.code === '200') {
               this.$notify.success('新增成功')
               //提交成功后清空表单
