@@ -66,7 +66,18 @@ const routes = [
             },
             {
                 path: 'editCategory', name: 'EditCategory', component: () => import('@/views/category/Edit.vue')
+            },
+            // Book
+            {
+                path: 'bookList', name: 'bookList', component: () => import('@/views/book/List.vue')
+            },
+            {
+                path: 'addBook', name: 'addBook', component: () => import('@/views/book/Add.vue')
+            },
+            {
+                path: 'editBook', name: 'editBook', component: () => import('@/views/book/Edit.vue')
             }
+
         ]
     },
     {
