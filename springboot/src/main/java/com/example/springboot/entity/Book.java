@@ -5,16 +5,13 @@ import lombok.Data;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.List;
 
 @Data
-public class Book implements Serializable {
+public class Book extends BaseEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    /**
-     * id
-     */
-    private Integer id;
 
     /**
      * 名称
@@ -51,19 +48,12 @@ public class Book implements Serializable {
      */
     private String bookNo;
 
-    /**
-     * 创建时间
-     */
-    private LocalDate createtime;
 
-    /**
-     * 更新时间
-     */
-    private LocalDate updatetime;
 
     /**
      * 封面
      */
     private String cover;
 
+    private List<String> categories;
 }

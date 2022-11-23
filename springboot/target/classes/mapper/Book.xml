@@ -16,9 +16,10 @@
             publish_date = #{publishDate},
             author = #{author},
             publisher = #{publisher},
-            Book = #{Book},
+            category = #{category},
             book_no = #{bookNo},
-            updatetime = #{updatetime}
+            updatetime = #{updatetime},
+            cover=#{cover}
             where id = #{id}
     </update>
     <delete id="deleteById">
@@ -45,7 +46,7 @@
                 and book_no=#{bookNo}
             </if>
         </where>
-        order by desc;
+        order by id desc
     </select>
 
     <select id="getById" resultType="com.example.springboot.entity.Book">

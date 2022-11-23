@@ -1,7 +1,9 @@
 package com.example.springboot.service.impl;
 
+import cn.hutool.core.collection.CollUtil;
 import com.example.springboot.controller.request.BaseRequest;
 import com.example.springboot.entity.Book;
+import com.example.springboot.entity.Category;
 import com.example.springboot.mapper.BookMapper;
 import com.example.springboot.service.IBookService;
 import com.github.pagehelper.PageHelper;
@@ -32,7 +34,7 @@ public class BookService implements IBookService {
 
     @Override
     public void save(Book obj) {
-
+        obj.setCategory(category(obj.getCategories()));
         bookMapper.save(obj);
     }
 
@@ -43,12 +45,22 @@ public class BookService implements IBookService {
 
     @Override
     public void update(Book obj) {
+        obj.setCategory(category(obj.getCategories()));
         bookMapper.updateById(obj);
     }
 
     @Override
     public void deleteById(Integer id) {
         bookMapper.deleteById(id);
+    }
+
+    private String category(List<String> categories){
+        StringBuilder sb=new StringBuilder();
+        if(CollUtil.isNotEmpty(categories)){
+            categories.forEach(v->sb.append(v).append(">"));
+            return sb.substring(0,sb.lastIndexOf(">"));
+        }
+        return sb.toString();
     }
 
 }

@@ -23,7 +23,11 @@
         <el-input v-model="form.publisher" placeholder="请输入出版社"></el-input>
       </el-form-item>
       <el-form-item label="分类" prop="category">
-        <el-input v-model="form.category" placeholder="请输入分类"></el-input>
+        <el-cascader
+            :props="{value:'name',label:'name'}"
+            v-model="form.categories"
+            :options="categories"
+            @change="handleChange"></el-cascader>
       </el-form-item>
       <el-form-item label="标准码" prop="bookNo">
         <el-input v-model="form.bookNo" placeholder="请输入标准码"></el-input>
@@ -45,9 +49,15 @@ import request from "@/utils/request";
 
 export default {
   name: 'AddBook',
+  created(){
+      request.get("/category/tree").then(res=>{
+        this.categories=res.data
+      })
+  },
   data() {
     return {
       form: {},
+      categories:[],
       rules: {
         //姓名仅要求为必填
         name: [
@@ -72,6 +82,9 @@ export default {
           })
         }
       })
+    },
+    handleChange(){
+
     }
   }
 }
